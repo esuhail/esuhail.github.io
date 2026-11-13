@@ -271,7 +271,7 @@ p a:hover, .hero-activity a:hover { text-decoration-color: var(--ink); }
 .estimate-speed { font-weight: 500; font-size: 18px; }
 .estimate-speed span { font-weight: 400; font-size: 13px; color: var(--ink-2); }
 .bar { height: 4px; margin-top: var(--s2); background: var(--bg); border-radius: 999px; overflow: hidden; }
-.bar span { display: block; height: 100%; background: var(--accent); border-radius: inherit; transition: width 400ms var(--ease); }
+.bar span { display: block; height: 100%; background: var(--accent); border-radius: inherit; transition: width 500ms var(--ease); }
 .is-rough .bar span { background: color-mix(in srgb, var(--ink-2) 45%, var(--bg)); }
 .is-rough .estimate-speed { color: var(--ink-2); }
 .estimate-meta { display: flex; justify-content: space-between; gap: var(--s4); margin-top: var(--s2); font-size: 13px; color: var(--ink-2); }
@@ -358,3 +358,95 @@ p a:hover, .hero-activity a:hover { text-decoration-color: var(--ink); }
   .edu-facts > div { grid-template-columns: 1fr; gap: 2px; }
   .note { padding: var(--s5); }
 }
+
+/* ------------------------------------------------------------------
+   Scroll motion
+   Three layers, from quietest to most visible:
+   1. Reveals: content rises 24px and fades in once, staggered within a
+      group (IntersectionObserver adds .is-visible, see lib/reveal.ts).
+   2. Headings rise out of a mask, like a line of type sliding into place.
+   3. Screenshots are tied to scroll position itself (CSS scroll-driven
+      animations): they lift and settle as they enter, like Apple's
+      product pages. Browsers without support fall back to layer 1.
+   Everything is off for prefers-reduced-motion, because .reveal-on is
+   never added and the scroll-driven rules sit inside a motion query.
+   ------------------------------------------------------------------ */
+
+:root { --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --reveal-step: 80ms; }
+
+.reveal-on [data-reveal]:not([data-reveal="stagger"]),
+.reveal-on [data-reveal="stagger"] > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 900ms var(--ease-out),
+    transform 900ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * var(--reveal-step));
+}
+.reveal-on [data-reveal].is-visible:not([data-reveal="stagger"]),
+.reveal-on [data-reveal="stagger"].is-visible > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* Children of a stagger group step in one after another. */
+.reveal-on [data-reveal="stagger"] > :nth-child(2) { --i: 1; }
+.reveal-on [data-reveal="stagger"] > :nth-child(3) { --i: 2; }
+.reveal-on [data-reveal="stagger"] > :nth-child(4) { --i: 3; }
+.reveal-on [data-reveal="stagger"] > :nth-child(5) { --i: 4; }
+.reveal-on [data-reveal="stagger"] > :nth-child(6) { --i: 5; }
+.reveal-on [data-reveal="stagger"] > :nth-child(7) { --i: 6; }
+.reveal-on [data-reveal="stagger"] > :nth-child(n+8) { --i: 7; }
+
+/* Long lists shouldn't make the last row wait: tighten the step. */
+.reveal-on .skill-group [data-reveal="stagger"],
+.reveal-on .decisions[data-reveal="stagger"] { --reveal-step: 55ms; }
+
+/* Masked headings: the heading box stays put, the word slides up inside it. */
+.mask { display: block; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.mask > span { display: block; }
+.reveal-on .section-head[data-reveal] > h2,
+.reveal-on h2.mask-host[data-reveal] { opacity: 1; transform: none; }
+.reveal-on [data-reveal] .mask > span,
+.reveal-on .mask-host[data-reveal] .mask > span {
+  transform: translateY(110%);
+  transition: transform 1100ms var(--ease-out);
+}
+.reveal-on [data-reveal].is-visible .mask > span { transform: none; }
+
+/* Estimator bars fill from zero once the list is on screen, row by row. */
+.bar span { width: var(--w); }
+.reveal-on .estimates[data-reveal]:not(.is-visible) .bar span { width: 0; }
+.reveal-on .estimates[data-reveal] .bar span {
+  transition: width 1100ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 90ms + 250ms);
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* The plinth itself stays still; the screenshot on it does the moving. */
+    .reveal-on .plinth[data-reveal] { opacity: 1; transform: none; transition: none; }
+    .plinth img {
+      animation: settle linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 45%;
+    }
+
+    /* A 2px reading-progress line along the bottom of the header. */
+    .header::after {
+      content: "";
+      position: absolute; left: 0; right: 0; bottom: -1px;
+      height: 2px;
+      background: var(--accent);
+      transform-origin: 0 50%;
+      transform: scaleX(0);
+      animation: progress linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+}
+@keyframes settle {
+  from { opacity: 0.15; transform: translateY(64px) scale(0.92); }
+  to   { opacity: 1;    transform: none; }
+}
+@keyframes progress { to { transform: scaleX(1); } }

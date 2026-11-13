@@ -104,10 +104,6 @@ export const projects: Project[] = [
       "A real match between a phone on cellular data and a laptop on home Wi-Fi.",
       "CI runs on every push and deploys to GitHub Pages.",
     ],
-    note: {
-      title: "Known trade-off",
-      body: "The host runs the rules, so a determined host could cheat. That's fine between friends. A ranked mode would move the host logic to a server, and it only depends on one connection interface, so that's a transport swap rather than a rewrite.",
-    },
   },
   {
     id: "canvas",

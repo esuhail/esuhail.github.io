@@ -5,8 +5,11 @@ import Hero from "./components/Hero";
 import ProjectSection from "./components/ProjectSection";
 import Skills from "./components/Skills";
 import { projects } from "./content";
+import { useReveal } from "./lib/reveal";
 
 export default function App() {
+  useReveal();
+
   return (
     <>
       <a className="skip" href="#work">Skip to work</a>
@@ -15,8 +18,8 @@ export default function App() {
         <Hero />
         <section className="section" id="work" aria-labelledby="work-title">
           <div className="container">
-            <div className="section-head">
-              <h2 id="work-title">Work</h2>
+            <div className="section-head" data-reveal="stagger">
+              <h2 id="work-title"><span className="mask"><span>Work</span></span></h2>
               <p>Three projects, each with a live link or source you can check.</p>
             </div>
             <div className="projects">

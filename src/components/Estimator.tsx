@@ -1,7 +1,8 @@
-import { useId, useMemo, useState } from "react";
+import { useId, useMemo, useState, type CSSProperties } from "react";
 import { ChevronDown, Gauge } from "lucide-react";
 import { GPUS } from "../lib/gpus";
 import { MODELS, predict } from "../lib/predict";
+import { stagger } from "../lib/reveal";
 
 const fmt = (tps: number) => (tps >= 10 ? Math.round(tps).toString() : tps.toFixed(1));
 
@@ -44,9 +45,9 @@ export default function Estimator() {
         </div>
       </div>
 
-      <ul className="estimates" aria-label={`Estimated speed on ${gpu.name}`}>
-        {rows.map((r) => (
-          <li key={r.model.name} className={r.fits ? "" : "is-rough"}>
+      <ul className="estimates" data-reveal="stagger" aria-label={`Estimated speed on ${gpu.name}`}>
+        {rows.map((r, i) => (
+          <li key={r.model.name} className={r.fits ? "" : "is-rough"} style={stagger(i)}>
             <div className="estimate-top">
               <span className="estimate-model">{r.model.name}</span>
               <span className="estimate-speed">
@@ -54,7 +55,7 @@ export default function Estimator() {
               </span>
             </div>
             <div className="bar" aria-hidden="true">
-              <span style={{ width: `${Math.max(1.5, (r.tokensPerSec / max) * 100)}%` }} />
+              <span style={{ "--w": `${Math.max(1.5, (r.tokensPerSec / max) * 100)}%` } as CSSProperties} />
             </div>
             <div className="estimate-meta">
               <span>Needs {r.needGb.toFixed(1)} GB</span>

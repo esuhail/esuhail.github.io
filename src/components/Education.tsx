@@ -1,15 +1,16 @@
 import { Award, GraduationCap } from "lucide-react";
 import { education as e } from "../content";
+import { stagger } from "../lib/reveal";
 
 export default function Education() {
   return (
     <section className="section" id="education" aria-labelledby="education-title">
       <div className="container">
-        <div className="section-head">
-          <h2 id="education-title">Education</h2>
+        <div className="section-head" data-reveal="stagger">
+          <h2 id="education-title"><span className="mask"><span>Education</span></span></h2>
         </div>
         <div className="edu-grid">
-          <div className="edu-item">
+          <div className="edu-item" data-reveal style={stagger(0)}>
             <span className="icon-tile" aria-hidden="true">
               <GraduationCap size={20} strokeWidth={1.5} />
             </span>
@@ -23,7 +24,7 @@ export default function Education() {
               </dl>
             </div>
           </div>
-          <div className="edu-item">
+          <div className="edu-item" data-reveal style={stagger(1)}>
             <span className="icon-tile" aria-hidden="true">
               <Award size={20} strokeWidth={1.5} />
             </span>

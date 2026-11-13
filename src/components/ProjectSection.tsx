@@ -11,7 +11,7 @@ export default function ProjectSection({ project: p }: { project: Project }) {
 
   return (
     <article className={`project ${tall ? "project-tall" : "project-wide"}`} id={p.id} aria-labelledby={`${p.id}-title`}>
-      <div className="project-intro">
+      <div className="project-intro" data-reveal="stagger">
         <span className="icon-tile" aria-hidden="true">
           <Icon size={22} strokeWidth={1.5} />
         </span>
@@ -55,12 +55,12 @@ export default function ProjectSection({ project: p }: { project: Project }) {
         </dl>
       </div>
 
-      <figure className="plinth">
+      <figure className="plinth" data-reveal>
         <img src={p.image.src} width={p.image.width} height={p.image.height} alt={p.image.alt} loading="lazy" decoding="async" />
       </figure>
 
       <div className="project-body">
-        <section className="block block-why">
+        <section className="block block-why" data-reveal>
           <h4>{p.why.title}</h4>
           {p.why.body.map((para) => (
             <p key={para.slice(0, 24)}>{para}</p>
@@ -68,8 +68,8 @@ export default function ProjectSection({ project: p }: { project: Project }) {
         </section>
 
         <section className="block block-decisions">
-          <h4>{p.decisions.title}</h4>
-          <dl className="decisions">
+          <h4 data-reveal>{p.decisions.title}</h4>
+          <dl className="decisions" data-reveal="stagger">
             {p.decisions.items.map((d) => (
               <div key={d.problem}>
                 <dt>{d.problem}</dt>
@@ -80,14 +80,14 @@ export default function ProjectSection({ project: p }: { project: Project }) {
         </section>
 
         {p.hasEstimator && (
-          <section className="block block-full">
+          <section className="block block-full" data-reveal>
             <Estimator />
           </section>
         )}
 
         <section className="block block-full">
-          <h4>How I know it works</h4>
-          <ul className="proof">
+          <h4 data-reveal>How I know it works</h4>
+          <ul className="proof" data-reveal="stagger">
             {p.proof.map((line) => (
               <li key={line}>
                 <Check size={18} strokeWidth={1.75} aria-hidden="true" />
@@ -98,7 +98,7 @@ export default function ProjectSection({ project: p }: { project: Project }) {
         </section>
 
         {p.note && (
-          <section className="block block-full note">
+          <section className="block block-full note" data-reveal>
             <h4>{p.note.title}</h4>
             <p>{p.note.body}</p>
           </section>

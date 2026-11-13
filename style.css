@@ -1,0 +1,232 @@
+/* Colors come from George Mason's green and gold, pushed lighter and darker
+   so text always passes WCAG AA contrast. */
+:root {
+  --paper: #f2f4ef;
+  --ink: #13221a;
+  --muted: #4f6056;
+  --rule: #cdd6cf;
+  --green: #006633;
+  --deep: #0a3b26;
+  --gold: #ffcc33;
+  --on-deep: #e9efe9;
+
+  --font: "Schibsted Grotesk", system-ui, sans-serif;
+  --measure: 38rem;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 4rem; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 1.0625rem/1.6 var(--font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+a { color: var(--green); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+a:hover { text-decoration-thickness: 2px; }
+
+:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.wrap { max-width: 72rem; margin: 0 auto; padding: 0 var(--gutter); }
+
+.skip {
+  position: absolute; left: 1rem; top: -3rem; z-index: 10;
+  background: var(--gold); color: var(--ink); padding: 0.5rem 1rem; font-weight: 700;
+}
+.skip:focus { top: 1rem; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+h1, h2, h3 { line-height: 1.1; margin: 0; }
+h2 { font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 800; letter-spacing: -0.03em; }
+h3 { font-size: 1.125rem; font-weight: 700; letter-spacing: -0.005em; margin-bottom: 0.5rem; }
+p { margin: 0 0 1em; }
+
+/* ---------- Hero ---------- */
+
+.hero {
+  background: var(--deep);
+  color: var(--on-deep);
+  padding: clamp(4rem, 12vw, 9rem) 0 clamp(3rem, 7vw, 5rem);
+}
+.hero h1 {
+  font-size: clamp(3.5rem, 13vw, 10.5rem);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.88;
+  color: #fff;
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+/* The one decorative move: a gold bar that draws under the name on load. */
+.hero h1::after {
+  content: "";
+  display: block;
+  width: 7ch;
+  height: 0.09em;
+  margin-top: 0.14em;
+  background: var(--gold);
+  transform-origin: left;
+  animation: draw 900ms 200ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes draw { from { transform: scaleX(0); } }
+@media (prefers-reduced-motion: reduce) { .hero h1::after { animation: none; } }
+
+.hero .lede {
+  font-size: clamp(1.125rem, 2.2vw, 1.375rem);
+  line-height: 1.5;
+  max-width: 34em;
+  margin-bottom: 2rem;
+}
+.hero a { color: #fff; }
+.hero a:hover { color: var(--gold); }
+
+.contact { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; font-weight: 500; }
+
+.latest { margin: 2rem 0 0; font-size: 0.9375rem; color: #b9c8bd; }
+.latest::before {
+  content: ""; display: inline-block; width: 0.55em; height: 0.55em; margin-right: 0.6em;
+  border-radius: 50%; background: var(--gold); vertical-align: 0.08em;
+}
+
+/* ---------- Section nav ---------- */
+
+.toc {
+  position: sticky; top: 0; z-index: 5;
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+.toc .wrap { display: flex; gap: 1.5rem; overflow-x: auto; scrollbar-width: none; }
+.toc a {
+  flex: none; padding: 0.9rem 0; color: var(--muted); text-decoration: none;
+  font-size: 0.9375rem; font-weight: 500; border-bottom: 2px solid transparent;
+}
+.toc a:hover, .toc a[aria-current="true"] { color: var(--ink); border-bottom-color: var(--green); }
+
+/* ---------- Projects ---------- */
+
+.project { padding: clamp(4rem, 9vw, 7rem) 0; border-bottom: 1px solid var(--rule); }
+
+.project-head { max-width: var(--measure); margin-bottom: 2.5rem; }
+.project-head h2 { margin-bottom: 0.75rem; }
+.summary { font-size: 1.25rem; line-height: 1.45; }
+.links { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1.5rem; font-weight: 700; margin-bottom: 0.75rem; }
+.updated { font-weight: 400; font-size: 0.875rem; color: var(--muted); }
+.stack { font-size: 0.9375rem; color: var(--muted); margin: 0; }
+
+.shot { margin: 0 0 3rem; }
+.shot img { border-radius: 10px; box-shadow: 0 1px 0 var(--rule), 0 18px 40px -24px rgb(10 59 38 / 0.45); }
+.shot.phone img { border: 1px solid var(--rule); background: #fff; }
+
+.body { max-width: var(--measure); }
+.body section { margin-bottom: 2.5rem; }
+.body section:last-child { margin-bottom: 0; }
+.body ul { padding-left: 1.2em; margin: 0; }
+.body li { margin-bottom: 0.4em; }
+.body li::marker { color: var(--green); }
+
+/* Problem / fix pairs: the problem is the heading, the fix sits under a green rule. */
+.fixes { margin: 0; }
+.fixes dt { font-weight: 700; margin-top: 1.25rem; }
+.fixes dt:first-child { margin-top: 0.25rem; }
+.fixes dd { margin: 0.25rem 0 0; padding-left: 1rem; border-left: 3px solid var(--green); color: var(--ink); }
+
+.formula {
+  background: #fff; border: 1px solid var(--rule); border-radius: 8px;
+  padding: 0.9rem 1.1rem; font-size: 1rem; font-variant-numeric: tabular-nums;
+}
+.formula span { font-weight: 700; }
+
+/* Phone-shaped screenshots sit beside the text on wide screens. */
+@media (min-width: 60rem) {
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, var(--measure)) minmax(16rem, 22rem);
+    column-gap: clamp(3rem, 7vw, 6rem);
+    align-items: start;
+  }
+  .split .project-head { grid-column: 1; }
+  .split .body { grid-column: 1; }
+  .split .shot { grid-column: 2; grid-row: 1 / span 2; position: sticky; top: 5rem; margin: 0; }
+}
+@media (max-width: 59.99rem) {
+  .shot.phone { max-width: 20rem; }
+}
+
+/* ---------- Estimator demo ---------- */
+
+.demo {
+  background: var(--deep); color: var(--on-deep);
+  border-radius: 12px; padding: clamp(1.25rem, 3vw, 2rem);
+  margin-left: calc(-1 * clamp(0rem, 2vw, 2rem));
+  margin-right: calc(-1 * clamp(0rem, 2vw, 2rem));
+}
+.demo h3 { color: #fff; }
+.demo label { display: block; font-weight: 700; margin-bottom: 0.4rem; color: #fff; }
+.demo select {
+  font: inherit; font-weight: 500; color: var(--ink); background: #fff;
+  border: 0; border-radius: 6px; padding: 0.55rem 0.75rem; min-width: 14rem; max-width: 100%;
+}
+.gpu-spec { font-size: 0.9375rem; color: #b9c8bd; margin: 0.5rem 0 1.25rem; }
+.estimates { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.estimates th, .estimates td { text-align: left; padding: 0.6rem 0.5rem 0.6rem 0; border-bottom: 1px solid rgb(255 255 255 / 0.14); vertical-align: top; }
+.estimates thead th { font-size: 0.875rem; font-weight: 500; color: #b9c8bd; }
+.estimates td:nth-child(n+2), .estimates th:nth-child(n+2) { text-align: right; padding-right: 0; }
+.estimates .model { font-weight: 700; color: #fff; }
+.estimates .speed { font-weight: 700; color: var(--gold); }
+.estimates .rough .speed { color: #b9c8bd; font-weight: 500; }
+.estimates small { display: block; font-size: 0.8125rem; color: #b9c8bd; font-weight: 400; }
+.demo .note { font-size: 0.875rem; color: #b9c8bd; margin: 1rem 0 0; }
+
+/* ---------- Skills matrix ---------- */
+
+.skills { padding: clamp(4rem, 9vw, 7rem) 0; }
+.skills h2 { margin-bottom: 0.75rem; }
+.skills > .wrap > p { color: var(--muted); max-width: var(--measure); }
+.matrix-scroll { overflow-x: auto; margin-top: 2rem; }
+.matrix { border-collapse: collapse; min-width: 40rem; width: 100%; max-width: 60rem; }
+.matrix th, .matrix td { padding: 0.55rem 0.75rem; border-bottom: 1px solid var(--rule); text-align: center; }
+.matrix th[scope="row"], .matrix thead th:first-child { text-align: left; font-weight: 500; padding-left: 0; }
+.matrix thead th { font-size: 0.9375rem; font-weight: 700; vertical-align: bottom; }
+.matrix thead a { color: var(--ink); }
+.matrix td:last-child, .matrix thead th:last-child { text-align: left; color: var(--muted); font-size: 0.9375rem; }
+.matrix tr.group th {
+  text-align: left; padding: 1.75rem 0 0.5rem; font-size: 1.0625rem; font-weight: 800;
+  border-bottom: 2px solid var(--ink);
+}
+.matrix tbody tr:not(.group):hover { background: rgb(0 102 51 / 0.06); }
+.matrix td[data-y]::before {
+  content: ""; display: inline-block; width: 0.8rem; height: 0.8rem;
+  border-radius: 50%; background: var(--green);
+}
+
+/* ---------- Education & footer ---------- */
+
+.education { padding: 0 0 clamp(4rem, 9vw, 7rem); }
+.education h2 { margin-bottom: 2rem; }
+.edu { display: grid; gap: 2rem 4rem; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); max-width: 60rem; }
+.edu ul { padding-left: 1.2em; margin: 0; }
+
+.foot { background: var(--deep); color: var(--on-deep); padding: clamp(4rem, 9vw, 6rem) 0 3rem; }
+.foot h2 { color: #fff; margin-bottom: 1rem; }
+.foot p { max-width: var(--measure); }
+.foot .contact { margin: 1.5rem 0 3rem; font-size: 1.125rem; }
+.foot a { color: #fff; }
+.foot a:hover { color: var(--gold); }
+.colophon { font-size: 0.875rem; color: #b9c8bd; margin: 0; }

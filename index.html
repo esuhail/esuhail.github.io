@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ehsan Suhail</title>
+  <meta name="description" content="Computer science student at George Mason University. Projects: LLM Bench, Duel and Canvas Grade Companion.">
+  <meta property="og:title" content="Ehsan Suhail">
+  <meta property="og:description" content="CS student at George Mason University. LLM Bench, Duel and Canvas Grade Companion.">
+  <meta property="og:image" content="https://esuhail.github.io/img/llm-bench.webp">
+  <meta name="theme-color" content="#0a3b26">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="main.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#projects">Skip to projects</a>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>Ehsan Suhail</h1>
+    <p class="lede">Computer science student at George Mason University, graduating May 2028. I build software where the answer has to be right: speed estimates for AI models, fair multiplayer games, and grade totals that match the official ones.</p>
+    <ul class="contact">
+      <li><a href="https://github.com/esuhail">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/esuhail">LinkedIn</a></li>
+      <li><a href="mailto:esuhail731@gmail.com">esuhail731@gmail.com</a></li>
+    </ul>
+    <p class="latest" id="latest" hidden></p>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Sections">
+  <div class="wrap">
+    <a href="#llm-bench">LLM Bench</a>
+    <a href="#duel">Duel</a>
+    <a href="#canvas">Canvas Grade Companion</a>
+    <a href="#skills">Skills</a>
+    <a href="#education">Education</a>
+  </div>
+</nav>
+
+<main id="projects">
+
+  <!-- LLM Bench -->
+  <article class="project" id="llm-bench" data-repo="llm-bench">
+    <div class="wrap">
+      <header class="project-head">
+        <h2>LLM Bench</h2>
+        <p class="summary">Check which AI models your graphics card can run, and how fast, before downloading them.</p>
+        <p class="links">
+          <a href="https://llm-bench.onrender.com">Open the live site</a>
+          <a href="https://github.com/esuhail/llm-bench">Read the code</a>
+          <span class="updated" data-updated></span>
+        </p>
+        <p class="stack">Python, FastAPI, PostgreSQL, SQLite, plain JavaScript, Ollama, GitHub Actions, Render</p>
+      </header>
+
+      <figure class="shot wide">
+        <img src="img/llm-bench.webp" width="1600" height="911" alt="LLM Bench home page: a graphics card picker set to RX 6750 XT, and a speed race where three models write the same paragraph at their measured speeds." loading="lazy">
+      </figure>
+
+      <div class="body">
+        <section>
+          <h3>Why I built it</h3>
+          <p>Local AI models are multi-gigabyte downloads, and you can't tell whether one runs well on your card until you've already downloaded it. I wanted a site someone who only knows the names ChatGPT and Claude could use: pick your graphics card, see what fits, see how fast it will answer.</p>
+        </section>
+
+        <section>
+          <h3>How the speed estimate works</h3>
+          <p>Writing one token means reading every active weight from graphics memory once, so speed is mostly limited by memory bandwidth. My first formula made a 0.6B model look half as efficient as a 9B model on the same card. Adding a fixed cost of about 1 ms per token fixed it: both came out near 55% efficiency.</p>
+          <p class="formula"><span>time per token</span> = <span>model size</span> ÷ (<span>efficiency</span> × <span>bandwidth</span>) + 1 ms</p>
+        </section>
+
+        <section class="demo" id="estimator" aria-labelledby="estimator-title">
+          <h3 id="estimator-title">Try the estimator</h3>
+          <p>This is the same formula the site uses, running in your browser with the default efficiency. The live site replaces it with efficiency learned from real benchmarks.</p>
+          <label for="gpu">Graphics card</label>
+          <select id="gpu"></select>
+          <p class="gpu-spec" id="gpu-spec"></p>
+          <table class="estimates">
+            <caption class="visually-hidden">Estimated speed per model</caption>
+            <thead><tr><th scope="col">Model</th><th scope="col">Memory needed</th><th scope="col">Estimated speed</th></tr></thead>
+            <tbody id="estimates"></tbody>
+          </table>
+          <p class="note">Models that don't fit spill into system memory, so their estimates are rough. The site labels them the same way.</p>
+          <noscript><p class="note">Turn on JavaScript to try the estimator.</p></noscript>
+        </section>
+
+        <section>
+          <h3>Getting numbers I could trust</h3>
+          <p>Each model answers 3 prompts, 3 times each, with the same settings. The first runs were wrong in ways that weren't obvious:</p>
+          <dl class="fixes">
+            <dt>The first run included the time to load the model</dt>
+            <dd>A warm-up run before measuring.</dd>
+            <dt>Ollama cached prompts, so repeat runs looked faster</dt>
+            <dd>A unique prefix on every prompt.</dd>
+            <dt>Thinking models generated thousands of hidden tokens</dt>
+            <dd>Turned thinking off for benchmarks.</dd>
+            <dt>One model ran about 4% slower because of its own sampling default</dt>
+            <dd>The same sampling settings for every model.</dd>
+          </dl>
+        </section>
+
+        <section>
+          <h3>How I know it works</h3>
+          <ul>
+            <li>22 pytest tests run on every push with GitHub Actions.</li>
+            <li>Estimates are checked with leave-one-out testing against real benchmark results.</li>
+            <li>The download and benchmark endpoints only run on your own machine and reject requests from other sites.</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </article>
+
+  <!-- Duel -->
+  <article class="project" id="duel" data-repo="duel">
+    <div class="wrap split">
+      <header class="project-head">
+        <h2>Duel</h2>
+        <p class="summary">Quick 1v1 minigames against a friend, best of 3 or 5, from a 4-letter room code. No accounts and no game server.</p>
+        <p class="links">
+          <a href="https://esuhail.github.io/duel/">Play Duel</a>
+          <a href="https://github.com/esuhail/duel">Read the code</a>
+          <span class="updated" data-updated></span>
+        </p>
+        <p class="stack">TypeScript, React, Vite, WebRTC (PeerJS), Vitest, Playwright, GitHub Actions, GitHub Pages</p>
+      </header>
+
+      <figure class="shot phone">
+        <img src="img/duel.webp" width="840" height="1720" alt="Duel start screen on a phone: four boxes for a room code, an on-screen letter keypad, and a Quick duel button." loading="lazy">
+      </figure>
+
+      <div class="body">
+        <section>
+          <h3>Why I built it</h3>
+          <p>I wanted something my friends and I could open on our phones and play right away. Hosting a game server costs money and needs upkeep, so the host's browser is the server and the two phones talk directly over WebRTC. It costs nothing to run.</p>
+        </section>
+
+        <section>
+          <h3>Decisions that made it work</h3>
+          <dl class="fixes">
+            <dt>Lag shouldn't decide who wins</dt>
+            <dd>Both phones build the same puzzle from a shared seed (mulberry32) and play it locally, then send one score. Nothing crosses the network during a round.</dd>
+            <dt>Both players need to start at the same moment</dt>
+            <dd>The guest pings the host 5 times, keeps the fastest round trip, and estimates the clock difference. The 3-2-1 lands within about 20 ms.</dd>
+            <dt>Syncing whole game states is fragile</dt>
+            <dd>The match rules are one pure reducer that runs on both phones. The host sends the event it just applied, not the new state, so messages stay tiny.</dd>
+            <dt>Phones drop connections</dt>
+            <dd>A heartbeat notices a lost player within about 8 seconds, the guest retries the same room, and the host waits 30 seconds before calling a forfeit.</dd>
+          </dl>
+        </section>
+
+        <section>
+          <h3>How I know it works</h3>
+          <ul>
+            <li>48 Vitest tests: every game's puzzle reproduces from its seed, plus ties, forfeits, rejoins and garbage messages.</li>
+            <li>7 Playwright tests open two browser windows and let bots play full matches, then a rematch.</li>
+            <li>A real match between a phone on cellular data and a laptop on home Wi-Fi.</li>
+            <li>CI runs on every push and deploys to GitHub Pages.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Known trade-offs</h3>
+          <p>The host runs the rules, so a determined host could cheat. That's fine between friends. A ranked mode would move the host logic to a server, and it only depends on one connection interface, so that's a transport swap rather than a rewrite.</p>
+        </section>
+      </div>
+    </div>
+  </article>
+
+  <!-- Canvas Grade Companion -->
+  <article class="project" id="canvas" data-repo="canvas-companion">
+    <div class="wrap split">
+      <header class="project-head">
+        <h2>Canvas Grade Companion</h2>
+        <p class="summary">A Chrome side panel that recalculates your Canvas grades, checks them against Canvas's own totals, and tells you what you need on the work that's left.</p>
+        <p class="links">
+          <a href="https://github.com/esuhail/canvas-companion">Read the code</a>
+          <span class="updated" data-updated></span>
+        </p>
+        <p class="stack">TypeScript, React, Chrome extension (WXT), Vitest, Playwright, GitHub Actions</p>
+      </header>
+
+      <figure class="shot phone">
+        <img src="img/canvas-up-next.webp" width="760" height="1520" alt="Canvas Grade Companion side panel showing upcoming work ranked by how much of the grade each item is worth and when it is due." loading="lazy">
+      </figure>
+
+      <div class="body">
+        <section>
+          <h3>Why I'm building it</h3>
+          <p>Canvas shows a total but not how it got there, and it can't answer the question students actually have: what do I need on the final? This panel works that out, and it only calls a number verified when it matches what Canvas reports.</p>
+        </section>
+
+        <section>
+          <h3>What it does</h3>
+          <dl class="fixes">
+            <dt>Verified grades</dt>
+            <dd>Recalculates every course total, including weighted categories and drop rules, and compares it with Canvas. On a real GMU account, every course with a reported total came out verified.</dd>
+            <dt>Target solver</dt>
+            <dd>Pick a target grade and it answers in one sentence: the average you need on what's left, that you're already safe, or that the target is out of reach and what the ceiling is.</dd>
+            <dt>Up next</dt>
+            <dd>One list across all courses, ranked by how much each item is worth and how soon it's due.</dd>
+            <dt>Syllabus check</dt>
+            <dd>Reads grade weights and dates from a syllabus PDF and shows where it disagrees with Canvas.</dd>
+          </dl>
+        </section>
+
+        <section>
+          <h3>How I know it works</h3>
+          <ul>
+            <li>190 Vitest unit tests. Drop rules are checked against a brute-force version, and every solver answer is fed back through the grade engine.</li>
+            <li>An end-to-end test loads the built extension in Chrome against a stand-in Canvas server, and asserts it only ever sends read requests.</li>
+            <li>Read-only by design: no server, no account, no access token. Nothing leaves the browser.</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </article>
+
+</main>
+
+<section class="skills" id="skills" aria-labelledby="skills-title">
+  <div class="wrap">
+    <h2 id="skills-title">Skills, and where I used them</h2>
+    <p>Each mark links a skill to a project you can open and check.</p>
+    <div class="matrix-scroll" tabindex="0" role="region" aria-labelledby="skills-title">
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th scope="col">Skill</th>
+            <th scope="col"><a href="#llm-bench">LLM Bench</a></th>
+            <th scope="col"><a href="#duel">Duel</a></th>
+            <th scope="col"><a href="#canvas">Canvas</a></th>
+            <th scope="col">Also</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="group"><th scope="rowgroup" colspan="5">Languages</th></tr>
+          <tr><th scope="row">Python</th><td data-y></td><td></td><td></td><td></td></tr>
+          <tr><th scope="row">TypeScript</th><td></td><td data-y></td><td data-y></td><td></td></tr>
+          <tr><th scope="row">JavaScript</th><td data-y></td><td></td><td></td><td>This site</td></tr>
+          <tr><th scope="row">SQL</th><td data-y></td><td></td><td></td><td></td></tr>
+          <tr><th scope="row">Java</th><td></td><td></td><td></td><td>Data Structures and OOP courses</td></tr>
+          <tr><th scope="row">PowerShell</th><td data-y></td><td></td><td></td><td></td></tr>
+          <tr><th scope="row">HTML and CSS</th><td data-y></td><td data-y></td><td data-y></td><td>This site</td></tr>
+          <tr class="group"><th scope="rowgroup" colspan="5">Frameworks and testing</th></tr>
+          <tr><th scope="row">FastAPI and REST APIs</th><td data-y></td><td></td><td></td><td></td></tr>
+          <tr><th scope="row">React</th><td></td><td data-y></td><td data-y></td><td></td></tr>
+          <tr><th scope="row">Vite</th><td></td><td data-y></td><td data-y></td><td></td></tr>
+          <tr><th scope="row">pytest</th><td data-y></td><td></td><td></td><td></td></tr>
+          <tr><th scope="row">Vitest</th><td></td><td data-y></td><td data-y></td><td></td></tr>
+          <tr><th scope="row">Playwright</th><td></td><td data-y></td><td data-y></td><td></td></tr>
+          <tr class="group"><th scope="rowgroup" colspan="5">Tools and platforms</th></tr>
+          <tr><th scope="row">Git and GitHub Actions</th><td data-y></td><td data-y></td><td data-y></td><td></td></tr>
+          <tr><th scope="row">PostgreSQL and SQLite</th><td data-y></td><td></td><td></td><td></td></tr>
+          <tr><th scope="row">Render</th><td data-y></td><td></td><td></td><td></td></tr>
+          <tr><th scope="row">GitHub Pages</th><td></td><td data-y></td><td></td><td>This site</td></tr>
+          <tr><th scope="row">WebRTC</th><td></td><td data-y></td><td></td><td></td></tr>
+          <tr><th scope="row">Ollama</th><td data-y></td><td></td><td></td><td></td></tr>
+          <tr><th scope="row">Chrome extensions</th><td></td><td></td><td data-y></td><td></td></tr>
+          <tr class="group"><th scope="rowgroup" colspan="5">Concepts</th></tr>
+          <tr><th scope="row">Peer-to-peer networking</th><td></td><td data-y></td><td></td><td></td></tr>
+          <tr><th scope="row">State machines</th><td></td><td data-y></td><td></td><td></td></tr>
+          <tr><th scope="row">LLM inference</th><td data-y></td><td></td><td></td><td></td></tr>
+          <tr><th scope="row">Performance benchmarking</th><td data-y></td><td></td><td></td><td></td></tr>
+          <tr><th scope="row">Unit and end-to-end testing</th><td data-y></td><td data-y></td><td data-y></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="education" id="education" aria-labelledby="education-title">
+  <div class="wrap">
+    <h2 id="education-title">Education</h2>
+    <div class="edu">
+      <div>
+        <h3>George Mason University, Fairfax, VA</h3>
+        <p>B.S. in Computer Science, concentration in Artificial Intelligence and Machine Learning. Expected May 2028. GPA 3.3.</p>
+        <p>Relevant coursework: Data Structures, Object-Oriented Programming, Discrete Mathematics, Calculus I and II.</p>
+      </div>
+      <div>
+        <h3>Certifications</h3>
+        <ul>
+          <li>Google Cybersecurity Professional Certificate, 2025</li>
+          <li>IBM Cybersecurity Analyst Professional Certificate, 2025</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <h2>Get in touch</h2>
+    <p>I'm looking for a software engineering, AI/ML or technology internship for summer 2027. The fastest way to reach me is email.</p>
+    <ul class="contact">
+      <li><a href="mailto:esuhail731@gmail.com">esuhail731@gmail.com</a></li>
+      <li><a href="https://github.com/esuhail">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/esuhail">LinkedIn</a></li>
+    </ul>
+    <p class="colophon">Hand-written HTML, CSS and JavaScript, hosted on GitHub Pages. <a href="https://github.com/esuhail/esuhail.github.io">Source</a></p>
+  </div>
+</footer>
+</body>
+</html>

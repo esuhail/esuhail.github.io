@@ -131,7 +131,24 @@ p a:hover, .hero-activity a:hover { text-decoration-color: var(--ink); }
   line-height: 1.45;
   color: var(--ink-2);
 }
-.hero .actions { margin-top: var(--s7); }
+.hero-email { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s4); margin-top: var(--s5); }
+.hero-email a {
+  font-size: clamp(17px, 1.8vw, 19px); font-weight: 500; color: var(--ink);
+  border-bottom: 1px solid var(--line); padding-bottom: 2px;
+  transition: border-color 160ms var(--ease);
+  overflow-wrap: anywhere;
+}
+.hero-email a:hover { border-color: var(--ink); }
+.copy {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 30px; padding: 0 var(--s3);
+  font: 500 13px/1 var(--font); color: var(--ink-2);
+  background: transparent; border: 1px solid var(--line); border-radius: 999px;
+  cursor: pointer;
+  transition: color 160ms var(--ease), border-color 160ms var(--ease), background-color 160ms var(--ease);
+}
+.copy:hover { color: var(--ink); background: var(--surface); }
+.hero .actions { margin-top: var(--s6); }
 .hero-activity {
   display: flex; align-items: center; gap: var(--s2);
   min-height: 24px; margin-top: var(--s6);
@@ -140,12 +157,13 @@ p a:hover, .hero-activity a:hover { text-decoration-color: var(--ink); }
 
 /* One orchestrated entrance, then nothing moves on its own. */
 @media (prefers-reduced-motion: no-preference) {
-  .hero-name, .hero-intro, .hero .actions, .hero-activity {
+  .hero-name, .hero-intro, .hero-email, .hero .actions, .hero-activity {
     animation: rise 700ms var(--ease) both;
   }
   .hero-intro { animation-delay: 80ms; }
-  .hero .actions { animation-delay: 160ms; }
-  .hero-activity { animation-delay: 240ms; }
+  .hero-email { animation-delay: 140ms; }
+  .hero .actions { animation-delay: 200ms; }
+  .hero-activity { animation-delay: 260ms; }
 }
 @keyframes rise { from { opacity: 0; transform: translateY(10px); } }
 

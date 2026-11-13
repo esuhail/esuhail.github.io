@@ -20,9 +20,13 @@
 html { scroll-behavior: smooth; scroll-padding-top: 4rem; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
+/* Page background: a faint dot grid, like engineering graph paper,
+   over a paper color that drifts slightly greener toward the bottom. */
 body {
   margin: 0;
-  background: var(--paper);
+  background:
+    radial-gradient(circle, rgb(0 102 51 / 0.13) 1px, transparent 1.4px) 0 0 / 24px 24px,
+    linear-gradient(180deg, #f3f5f0 0%, #ebf1ec 100%);
   color: var(--ink);
   font: 400 1.0625rem/1.6 var(--font);
   -webkit-font-smoothing: antialiased;
@@ -60,8 +64,32 @@ p { margin: 0 0 1em; }
 
 /* ---------- Hero ---------- */
 
+/* Dark bands (hero, footer): two soft glows, Mason green and a hint of gold,
+   plus a dot grid that fades out so the text stays on a clean surface. */
+.hero, .foot {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(70rem 36rem at 88% -15%, rgb(0 140 70 / 0.55), transparent 65%),
+    radial-gradient(45rem 28rem at -5% 115%, rgb(0 120 60 / 0.35), transparent 70%),
+    var(--deep);
+}
+.hero::before, .foot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle, rgb(255 255 255 / 0.11) 1px, transparent 1.4px) 0 0 / 24px 24px;
+  -webkit-mask-image: linear-gradient(115deg, transparent 25%, #000 85%);
+          mask-image: linear-gradient(115deg, transparent 25%, #000 85%);
+}
+.foot::before {
+  -webkit-mask-image: linear-gradient(295deg, transparent 30%, #000 90%);
+          mask-image: linear-gradient(295deg, transparent 30%, #000 90%);
+}
+
 .hero {
-  background: var(--deep);
   color: var(--on-deep);
   padding: clamp(4rem, 12vw, 9rem) 0 clamp(3rem, 7vw, 5rem);
 }
@@ -123,6 +151,13 @@ p { margin: 0 0 1em; }
 
 .project { padding: clamp(4rem, 9vw, 7rem) 0; border-bottom: 1px solid var(--rule); }
 
+/* Every other project gets a soft green wash so the three read as separate chapters. */
+.project:nth-of-type(even) {
+  background:
+    radial-gradient(60rem 30rem at 100% 0%, rgb(0 102 51 / 0.07), transparent 70%),
+    rgb(0 102 51 / 0.035);
+}
+
 .project-head { max-width: var(--measure); margin-bottom: 2.5rem; }
 .project-head h2 { margin-bottom: 0.75rem; }
 .summary { font-size: 1.25rem; line-height: 1.45; }
@@ -172,7 +207,10 @@ p { margin: 0 0 1em; }
 /* ---------- Estimator demo ---------- */
 
 .demo {
-  background: var(--deep); color: var(--on-deep);
+  background:
+    radial-gradient(40rem 20rem at 100% 0%, rgb(0 140 70 / 0.45), transparent 70%),
+    var(--deep);
+  color: var(--on-deep);
   border-radius: 12px; padding: clamp(1.25rem, 3vw, 2rem);
   margin-left: calc(-1 * clamp(0rem, 2vw, 2rem));
   margin-right: calc(-1 * clamp(0rem, 2vw, 2rem));
@@ -223,7 +261,7 @@ p { margin: 0 0 1em; }
 .edu { display: grid; gap: 2rem 4rem; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); max-width: 60rem; }
 .edu ul { padding-left: 1.2em; margin: 0; }
 
-.foot { background: var(--deep); color: var(--on-deep); padding: clamp(4rem, 9vw, 6rem) 0 3rem; }
+.foot { color: var(--on-deep); padding: clamp(4rem, 9vw, 6rem) 0 3rem; }
 .foot h2 { color: #fff; margin-bottom: 1rem; }
 .foot p { max-width: var(--measure); }
 .foot .contact { margin: 1.5rem 0 3rem; font-size: 1.125rem; }
